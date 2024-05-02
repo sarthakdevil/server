@@ -7,7 +7,7 @@ import {
   getLecturesByCourseId,
   removeLectureFromCourse,
   updateCourseById,
-} from '../controllers/course.controller.js';
+} from '../controller/course.controller.js';
 import {
   authorizeRoles,
   authorizeSubscribers,
@@ -15,10 +15,10 @@ import {
 } from '../middlewares/auth.middleware.js';
 import upload from '../middlewares/multer.middleware.js';
 
-const router = Router();
+const Courserouter = Router();
 
-router
-  .route('/')
+Courserouter
+  .route('/courses')
   .get(getAllCourses)
   .post(
     isLoggedIn,
@@ -28,7 +28,7 @@ router
   )
   .delete(isLoggedIn, authorizeRoles('ADMIN'), removeLectureFromCourse);
 
-router
+Courserouter
   .route('/:id')
   .get(isLoggedIn, authorizeSubscribers, getLecturesByCourseId) // Added authorizeSubscribers to check if user is admin or subscribed if not then forbid the access to the lectures
   .post(
@@ -39,4 +39,5 @@ router
   )
   .put(isLoggedIn, authorizeRoles('ADMIN'), updateCourseById);
 
-export default router;
+
+export default Courserouter;

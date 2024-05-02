@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/error.utils.js';
 
-const isLoggedIn = async (req, res, next) => {
+export const isLoggedIn = async (req, res, next) => {
   try {
     // Extracting token from the cookies
     const { token } = req.cookies;
@@ -35,6 +35,28 @@ const isLoggedIn = async (req, res, next) => {
     console.error('Error during token verification:', error);
     return next(new AppError('Unauthorized, please login to continue', 401));
   }
+};
+
+
+export const authorizeRoles = (...roles) => async (req, res, next) => {
+  const currentUserRole = req.user.role;
+  if (!roles.includes(currentUserRole)) {
+    res.status(401).json({
+      success: false,
+      msg: 'You are not authorized to perform this action'
+    });
+  } else {
+    next();
+  }
+};
+
+export const authorizeSubscribers = async (req, _res, next) => {
+  // If user is not admin or does not have an active subscription then error else pass
+  if (req.user.role !== "ADMIN" && req.user.subscription.status !== "active") {
+    return next(new AppError("Please subscribe to access this route.", 403));
+  }
+
+  next();
 };
 
 export default isLoggedIn;

@@ -2,13 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 
 import cloudinary from 'cloudinary';
-
-import asyncHandler from '../middlewares/asyncHandler.middleware.js';
-import Course from '../models/course.model.js';
-import AppError from '../utils/AppError.js';
-
-
-export const getAllCourses = asyncHandler(async (_req, res, next) => {
+import Course from '../model/course.model.js';
+import AppError from '../utils/error.utils.js';
+export const getAllCourses = async (_req, res, next) => {
   // Find all the courses without lectures
   const courses = await Course.find({}).select('-lectures');
 
@@ -17,9 +13,9 @@ export const getAllCourses = asyncHandler(async (_req, res, next) => {
     message: 'All courses',
     courses,
   });
-});
+};
 
-export const createCourse = asyncHandler(async (req, res, next) => {
+export const createCourse = async (req, res, next) => {
   const { title, description, category, createdBy } = req.body;
 
   if (!title || !description || !category || !createdBy) {
@@ -79,10 +75,10 @@ export const createCourse = asyncHandler(async (req, res, next) => {
     message: 'Course created successfully',
     course,
   });
-});
+};
 
 
-export const getLecturesByCourseId = asyncHandler(async (req, res, next) => {
+export const getLecturesByCourseId = async (req, res, next) => {
   const { id } = req.params;
 
   const course = await Course.findById(id);
@@ -96,10 +92,10 @@ export const getLecturesByCourseId = asyncHandler(async (req, res, next) => {
     message: 'Course lectures fetched successfully',
     lectures: course.lectures,
   });
-});
+};
 
 
-export const addLectureToCourseById = asyncHandler(async (req, res, next) => {
+export const addLectureToCourseById = async (req, res, next) => {
   const { title, description } = req.body;
   const { id } = req.params;
 
@@ -165,10 +161,10 @@ export const addLectureToCourseById = asyncHandler(async (req, res, next) => {
     message: 'Course lecture added successfully',
     course,
   });
-});
+};
 
 
-export const removeLectureFromCourse = asyncHandler(async (req, res, next) => {
+export const removeLectureFromCourse = async (req, res, next) => {
   // Grabbing the courseId and lectureId from req.query
   const { courseId, lectureId } = req.query;
 
@@ -223,9 +219,9 @@ export const removeLectureFromCourse = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Course lecture removed successfully',
   });
-});
+};
 
-export const updateCourseById = asyncHandler(async (req, res, next) => {
+export const updateCourseById = async (req, res, next) => {
   // Extracting the course id from the request params
   const { id } = req.params;
 
@@ -250,10 +246,10 @@ export const updateCourseById = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Course updated successfully',
   });
-});
+};
 
 
-export const deleteCourseById = asyncHandler(async (req, res, next) => {
+export const deleteCourseById = async (req, res, next) => {
   // Extracting id from the request parameters
   const { id } = req.params;
 
@@ -273,4 +269,4 @@ export const deleteCourseById = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Course deleted successfully',
   });
-});
+};

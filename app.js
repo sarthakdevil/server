@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import {config} from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import errorMiddleware from './middlewares/error.middleware.js';
+import Courserouter from './routes/course.route.js';
 config();
 
 
@@ -24,7 +25,7 @@ app.get('/ping',(req,res)=>{
 })
 
 app.use('/api/v1/user',userRoutes);
-
+app.use('/api/v1',Courserouter)
 app.get('*',(req,res)=>{
     res.status(404).send('404 not fond')
 })

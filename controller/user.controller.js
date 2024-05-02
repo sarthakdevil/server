@@ -249,6 +249,7 @@ const resetPassword = async (req, res, next) => {
     message: 'Password changed successfully',
   });
 };
+
 export{
     register,
     login,
