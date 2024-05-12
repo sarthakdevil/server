@@ -17,9 +17,11 @@ export const getAllCourses = async (_req, res, next) => {
 
 export const createCourse = async (req, res, next) => {
   const { title, description, category, createdBy } = req.body;
+  console.log(title, description, category, createdBy)
 
   if (!title || !description || !category || !createdBy) {
     return next(new AppError('All fields are required', 400));
+
   }
 
   const course = await Course.create({

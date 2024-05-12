@@ -1,18 +1,18 @@
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/error.utils.js';
-
 export const isLoggedIn = async (req, res, next) => {
   try {
     // Extracting token from the cookies
-    const { token } = req.cookies;
+    const {token} = req.cookies
 
+    console.log(token)
     // If no token, send an unauthorized message
     if (!token) {
       throw new AppError('Unauthorized, please login to continue', 401);
     }
 
     // Decoding the token using jwt package verify method
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // If decoding fails, send an unauthorized message
     if (!decoded) {
@@ -39,6 +39,9 @@ export const isLoggedIn = async (req, res, next) => {
 
 
 export const authorizeRoles = (...roles) => async (req, res, next) => {
+    const {token} = req.cookies
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = decoded
   const currentUserRole = req.user.role;
   if (!roles.includes(currentUserRole)) {
     res.status(401).json({

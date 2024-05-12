@@ -1,19 +1,21 @@
 import express from 'express';
 const app = express();
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import morgan from 'morgan'
 import {config} from 'dotenv'
 import userRoutes from './routes/user.route.js'
 import errorMiddleware from './middlewares/error.middleware.js';
 import Courserouter from './routes/course.route.js';
+import Paymentrouter from './routes/payment.routes.js';
 config();
 
 
 app.use(cors(
-    {origin: [process.env.Frontend_URL], methods: ['GET', 'POST'],credentials: true }
+    {origin: [process.env.Frontend_URL], methods: ['GET', 'POST','PUT','DELETE'],credentials: true }
 
 ));
-
+app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -26,6 +28,7 @@ app.get('/ping',(req,res)=>{
 
 app.use('/api/v1/user',userRoutes);
 app.use('/api/v1',Courserouter)
+app.use('/api/v1/payments',Paymentrouter)
 app.get('*',(req,res)=>{
     res.status(404).send('404 not fond')
 })
